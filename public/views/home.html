@@ -1,16 +1,71 @@
 <div class="container">
-    <form>
-        <div class="form-group" ng-repeat="descriptor in descriptors">
-            <label>{{ ::descriptor.description }}</label>
-            <div class="input-group" ng-if="descriptor.unit">
-                <span class="input-group-addon">{{ ::descriptor.unit }}</span>
-                <input type="text" class="form-control" ng-model="descriptor.value">
-                
+    <form ng-if="!parameters">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <label>Select a profile to fill descriptors</label>
+                    <select class="form-control" ng-model="options.selectedProfile" ng-change="selectProfile()">
+                        <option ng-repeat="profile in profiles" ng-value="profile.slug">{{ profile.name }}</option>
+                    </select>
+                </div>
             </div>
-            <input type="text" class="form-control" ng-if="!descriptor.unit" ng-model="descriptor.value">
-            <span ng-if="descriptor.values" class="help-block">Values : {{ ::descriptor.values }}</span>
         </div>
-
-        <button type="submit" class="btn btn-primary" ng-click="send()">Send</button>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group" ng-repeat="descriptor in descriptors">
+                    <label>{{ ::descriptor.description }}</label>
+                    <div class="input-group" ng-if="descriptor.unit">
+                        <span class="input-group-addon">{{ ::descriptor.unit }}</span>
+                        <input type="text" class="form-control" ng-model="descriptor.value">
+                    </div>
+                    <input type="text" class="form-control" ng-if="!descriptor.unit" ng-model="descriptor.value">
+                    <span ng-if="descriptor.values" class="help-block">Values : {{ ::descriptor.values }}</span>
+                </div>
+                <button type="submit" class="btn btn-primary" ng-click="send()">Send</button>
+            </div>
+        </div>
     </form>
+    <div ng-if="parameters">
+        <div class="form-group" ng-repeat="parameter in parameters">
+            <label>{{ ::parameter.name }}</label>
+            <p class="form-control-static">{{ ::parameter.finalValue }} {{ ::parameter.unit }}</p>
+        </div>
+        <div id="creationAlert" class="alert alert-success alert-dismissible" style="display:none;" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button> Congratulations! Your profile has been created
+        </div>
+        <div id="updateAlert" class="alert alert-success alert-dismissible" style="display:none;" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button> Congratulations! Your profile has been updated
+        </div>
+        <button type="submit" class="btn btn-primary" ng-click="openModal()">Save</button>
+        <button type="button" class="btn btn-primary" ng-click="search()">Back</button>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Please fill informations</h4>
+            </div>
+            <form name="profileForm" class="modal-body" novalidate="">
+                <div class="form-group">
+                    <label>Profile name</label>
+                    <input type="text" class="form-control" ng-model="newProfile.name" required>
+                </div>
+                <div class="form-group">
+                    <label>Profile description</label>
+                    <textarea class="form-control" ng-model="newProfile.description"></textarea>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" ng-disabled="!profileForm.$valid" ng-click="save()">Save changes</button>
+            </div>
+        </div>
+    </div>
 </div>
