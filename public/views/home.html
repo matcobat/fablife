@@ -1,0 +1,16 @@
+<div class="container">
+    <form>
+        <div class="form-group" ng-repeat="descriptor in descriptors">
+            <label>{{ ::descriptor.description }}</label>
+            <div class="input-group" ng-if="descriptor.unit">
+                <span class="input-group-addon">{{ ::descriptor.unit }}</span>
+                <input type="text" class="form-control" ng-model="descriptor.value">
+                
+            </div>
+            <input type="text" class="form-control" ng-if="!descriptor.unit" ng-model="descriptor.value">
+            <span ng-if="descriptor.values" class="help-block">Values : {{ ::descriptor.values }}</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" ng-click="send()">Send</button>
+    </form>
+</div>
