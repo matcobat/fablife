@@ -20,8 +20,14 @@ router.get('/descriptors', function(req, res, next) {
             'bearer': process.env.TOKEN
         }
     }, function(error, response, body) {
-        var descriptors = JSON.parse(body);
-        res.json(descriptors);
+        if (error) {
+            res.send(500, error);
+        } else if (response.statusCode != 500) {
+            res.send(response.statusCode, response.statusMessage);
+        } else {
+            var descriptors = JSON.parse(body);
+            res.json(descriptors);
+        }
     });
 });
 
@@ -30,14 +36,14 @@ router.post('/salus', function(req, res, next) {
         'auth': {
             'bearer': process.env.TOKEN
         },
-        form: req.body
+        json: req.body
     }, function(error, response, body) {
-        console.log(body);
-        
-        console.log(error);
+
+
         if (error) {
             res.send(500, error);
-            
+        } else if (response.statusCode != 500) {
+            res.send(response.statusCode, response.statusMessage);
         } else {
             var parameters = JSON.parse(body);
             res.json(parameters);
